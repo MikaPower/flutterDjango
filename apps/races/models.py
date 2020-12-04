@@ -7,7 +7,13 @@ class Race(models.Model):
     latitude = models.CharField(max_length=200)
     longitude = models.CharField(max_length=200)
     created = models.DateTimeField(default=now,auto_now=False)
-    image = models.CharField(null=True, max_length=400)
+    image = models.ImageField(null=True, max_length=400,upload_to='images/races')
+
+    def get_image_url(self):
+        return self.image.url
+
+    def __str__(self):
+        return self.name
 
 
 class Pilot(models.Model):
@@ -20,3 +26,6 @@ class Pilot(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['race', 'bike_name'], name='name of constraint')
         ]
+
+    def __str__(self):
+        return self.name

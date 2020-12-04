@@ -8,17 +8,16 @@ from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-
+from django.conf import settings
 from apps.races.models import Race, Pilot
 
 
 def index(request):
     races = [{'races': []}]
-    for race in Race.objects.values('id', 'name', 'latitude', 'longitude', 'image').order_by("created"):
-        print(race)
+    for race in Race.objects.order_by("created").all():
         races[0]['races'].append(
-            {'id': race['id'], 'name': race['name'], 'latitude': race['latitude'], 'longitude': race['longitude'],
-             'image': race['image']})
+            {'id': race.id, 'name': race.name, 'latitude': race.latitude, 'longitude': race.longitude,
+             'image': 'http://'+request.get_host()+race.image.url})
     return JsonResponse(races, safe=False)
 
 
